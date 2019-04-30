@@ -1,0 +1,43 @@
+#Lboard{
+	margin-left: 24px;
+	width: 90%;
+	border: 1px solid #a6cbe7;
+}
+.btitle{
+	padding-left: 10px;
+	text-align: left;
+	line-height: 30px;
+	color: #1b72af;
+	border: 1px solid #d6e8f4;
+	/* background-image: url(<%=request.getContextPath() %>/images/h.png) repeat-x; */
+	background-image: url(../images/h.png) repeat-x;
+}
+#Lboard ul li{
+	margin: 5px;
+	display: block;
+	width: 250px;
+	height: 60px;
+	float: left;
+	padding: 5px;
+}
+#Lboard ul li a{
+	text-decoration: none;
+}
+#Lboard ul li a:HOVER { 
+	text-decoration: underline;
+}
+#Lboard .bimg{
+	float: left;
+}
+#Lboard strong{
+	margin-left: 15px;
+	height: 24px;
+	font-size: 18px;
+}
+#Lboard p{
+	padding-left: 60px;
+}
+.clear{
+	content: "";
+	clear: both;
+}

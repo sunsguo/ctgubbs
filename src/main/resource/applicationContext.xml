@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/context    
+	http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- 定义数据源Bean,用c3p0数据源实现 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<!-- 指定链接数据库驱动 -->
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<!-- 指定链接数据库的url -->
+		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/ctgubbs?useSSL=false"></property>
+		<!-- 指定链接数据库的用户名 -->
+		<property name="user" value="root"></property>
+		<!-- 指定链接数据库的密码 -->
+		<property name="password" value="123456"></property>
+		<!-- 数据库链接池的最大链接数 -->
+		<property name="maxPoolSize" value="40"></property>
+		<!-- 数据库连接池的最小连接数 -->
+		<property name="minPoolSize" value="1"></property>
+		<!-- 指定数据库连接池的初始化连接数 -->
+		<property name="initialPoolSize" value="1"></property>
+		<!-- 指定数据库连接池的链接最大东线时间 -->
+		<property name="maxIdleTime" value="20"></property>
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<!-- 依赖注入数据源，注入的正是上面定义的dataSource -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- mappingResource用来列出全部映射文件 -->
+		<property name="mappingResources">
+			<list>
+			<!-- 列出bibernate映射文件 -->
+				<value>com/orm/Admin.hbm.xml</value>
+				<value>com/orm/Board.hbm.xml</value>
+				<value>com/orm/Student.hbm.xml</value>
+				<value>com/orm/Post.hbm.xml</value>
+				<value>com/orm/Reply.hbm.xml</value>
+			</list>
+		</property>
+		<!-- 定义bibernate的SessionFactory的属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.formate_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>  
+                <prop key="hibernate.jdbc.batch_size">25</prop>  
+				<prop key="hibernate.cache.use_query_cache">true</prop>  
+                <prop key="hibernate.max_fetch_depth">1</prop>  
+                <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop> 
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>  
+			</props>
+		</property>
+        <!-- <property name="entityInterceptor">   
+            <ref bean="treeInterceptor"/>
+        </property>
+        <property name="cacheProvider">
+            <ref bean="cacheProvider"/>
+        </property>
+        <property name="lobHandler">
+            <ref bean="lobHandler" />
+        </property> -->
+		<!--  <property name="configLocation" value="classpath:hibernate.cfg.xml"></property>  -->
+	</bean>
+	
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+		<!-- <property name="allowCreate">
+			<value>true</value>
+		</property> -->
+	</bean>
+	
+	<!-- 依赖注入，通过注解注入 -->
+	<!-- 即将被注入dao -->
+	<bean id="dao" class="com.dao.BaseDaoImpl"></bean>
+	
+	<!-- 业务层注入，即将注入action控制层 -->
+	<bean id="loginService" class="com.serviceImpl.LoginServiceImpl"></bean>
+	<bean id="adminService" class="com.serviceImpl.AdminServiceImpl"></bean>
+	<bean id="studentService" class="com.serviceImpl.StudentServiceImpl"></bean>
+	<bean id="postService" class="com.serviceImpl.PostServiceImpl"></bean>
+	<bean id="replyService" class="com.serviceImpl.ReplyServiceImpl"></bean>
+	<bean id="boardService" class="com.serviceImpl.BoardServiceImpl"></bean>
+	
+	<!-- 开启事务支持 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- 声明事务边界 -->
+	<!-- <aop:config>
+		<aop:pointcut id="txServices" expression="execution(* com.service..*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txServices"/>
+	</aop:config>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="saveOrUpdate" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice> -->
+	
+	<!-- enables scanning for @Transactionalannotations -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<!-- 开启spring的Annotation的注解处理器 -->
+	<context:annotation-config/>
+	<!-- 开启spring的bean自动扫面机制，来查找和管理bean实例 -->
+	<context:component-scan base-package="com"/>
+</beans>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

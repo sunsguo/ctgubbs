@@ -1,0 +1,42 @@
+#pmain table{
+	border-collapse: collapse;
+	width: 95%;
+}
+#pmain th, tr, td{
+	border: 1px solid silver;
+	background: #e3f2e1;
+}
+#pmain th{
+	height: 32px;
+}
+#nav{
+	margin: 10px 0 10px 30px;
+}
+.left_td{
+	width: 15%;
+	text-align: left;
+	padding-left: 30px;
+}
+.right_td{
+	width: 70%;
+	text-align: left;
+	padding-left: 30px; 
+	vertical-align: text-top;
+	background: white;
+}
+#myImg{
+	width: 128px;
+	height: 128px;
+}
+#pmain li{
+	margin: 8px;
+}
+#fastReply{
+	margin-top: 30px;
+}
+#pmain #reply{
+	border: none;
+	cursor: pointer;
+	width: 74px;
+	height: 31px;
+} 

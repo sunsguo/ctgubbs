@@ -1,0 +1,98 @@
+#tabs{
+	height: 20px;
+	width: 300px;
+	margin: 0 auto;
+}
+#tabContent{
+	width: 400px;
+	height: 200px;
+	border: 1px solid #cacaca;
+	margin-top: 10px;
+	border-radius: 15px 15px 0 0;
+	box-shadow: 15px 2px 4px #808080;
+}
+ul{
+	float: left;
+	list-style-type: none;
+	line-height: 25px;
+}
+li{
+	width: 120px;
+	height: 30px;
+	text-align: center;
+	float: left;	/*让 li 横向排列*/
+	display: block;
+	cursor: pointer;
+}
+#tabs{
+	position: relative;
+	left: -30px;
+}
+#tabs li{
+	display: block;
+	border-radius: 5px 5px 0 0;
+}
+li:HOVER {  }
+.loginBtn{
+	border: none;
+	width: 100px;
+	height: 30px;
+	background: url(../images/btn-submit.png) no-repeat;
+}
+.loginBtn:HOVER { 
+	cursor: pointer;
+}
+.outerBorder{
+	width: 200px;
+	height: 25px;
+	background: #f1faff;
+	border: 1px solid #c1c1c1;
+}
+.tdLabel{
+	font-family: 宋体 ;
+	font-size: 14px;
+}
+td{
+	padding-top: 15px;
+}
+#login{
+	margin-left: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

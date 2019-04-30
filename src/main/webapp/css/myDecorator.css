@@ -1,0 +1,46 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-size: 13px;
+}
+
+#outer {
+    width: 980px;
+    margin: 0 auto;
+    margin-left: 15%;
+}
+
+#main {
+    border: 1px solid #a6cbe7;
+    border-top: none;
+    min-height: 500px;
+    height: auto;
+    overflow: visible;
+    padding-top: 15px;
+}
+
+#searchBar {
+    height: 50px;
+    margin-top: 5px;
+    border: 1px solid #d0e3f4;
+    border-top: none;
+    background: #f4f9ff;
+}
+
+#searchKey {
+    border: 1px solid sliver;
+    height: 25px;
+    line-height: 30px;
+    width: 200px;
+}
+
+#searchBar ul {
+    float: left;
+    margin-top: 15px;
+    margin-left: 5%;
+}
+
+#searchBar ul li {
+    float: left;
+    width: 310px;
+}

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+   <!--  <constant name="struts.objectFactory" value="spring"></constant> -->
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<constant name="struts.devMode" value="true"></constant>  
+	<package name="default" namespace="/" extends="struts-default">
+		<interceptors>
+			<!-- 定义一个名为suthority的拦截器 -->
+			<interceptor name="authority" class="com.interceptor.AuthorityInterceptor"></interceptor>
+			<!-- 定义一个包含权限检查的拦截器栈 -->
+			<interceptor-stack name="mydefault">
+				<!-- 配置自定义拦截器 -->
+				<interceptor-ref name="authority">
+					<param name="includeMethods">
+						preparePost,stuReply,viewPostByUser,personalStuInfo
+					</param>
+				</interceptor-ref>
+				<!-- 配置内建默认拦截器 没配置的话action取不到值 -->
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="mydefault"></default-interceptor-ref>
+		
+		<!-- 定义全局result -->
+		<global-results>
+			<result name="login">/login.jsp</result>
+			<result name="stuPersonalInfo">/MessageInfo/pleaseComplete.jsp</result>
+			<result name="adminPersonalInfo">/</result>
+			<result name="error">/MessageInfo/error.jsp</result>
+		</global-results>
+		
+		<global-allowed-methods>regex:.*</global-allowed-methods>
+		
+		<action name="index" class="com.action.IndexAction">
+			<result name="success">index.jsp</result>
+		</action>
+		
+		<!-- 发帖配置 *代表的是method="{1}"中的{1}的值 -->
+		 <action name="post_*" class="com.action.PostAction" method="{1}">
+			<result name="success">/PostManagement/PostManage.jsp</result>
+			<result name="postSuccess">/PostManagement/PostSuccess.jsp</result>
+			<result name="viewDetail">/PostManagement/ViewPostDetail.jsp</result>
+			<result name="prepareSuccess">/PostManagement/ModifyPost.jsp</result>
+			<result name="modifySuccess" type="redirectAction">
+				<param name="actionName">post_post</param>
+				<param name="namespace">/</param>
+				<param name="result">${result}</param>	<!-- action参数 -->
+			</result>
+			<result name="deleteSuccess" type="redirectAction">
+				<param name="actionName">post_post</param>
+				<param name="namespace">/</param>
+				<param name="result">${result}</param>
+			</result>
+			<result name="myposts">/PostManagement/MyPost.jsp</result>
+			<result name="preparePost">/PostManagement/AddPost.jsp</result>
+			<result name="searchSuccess">/PostManagement/PostSearchResult.jsp</result>
+		</action>
+		
+		<!-- 学生管理 -->
+		<action name="student_*" class="com.action.StudentManageAction" method="{1}">
+			<result name="modifySuccess">/MessageInfo/ModifyStuInfoSuccess.jsp</result>
+			<result name="success">/PersonalInfo/StuPersonalInfo.jsp</result>
+			<result name="modifyPswSuccess">/PersonalInfo/StuPswModify.jsp</result>
+			<result name="goToModigyPsw">/PersonalInfo/StuPswModify.jsp</result>
+			<result name="findPwd">/PersonalInfo/FindPwd.jsp</result>
+			<result name="findSuccess">/login.jsp</result>
+		</action>
+		
+		<!-- 登陆管理 指定method属性 -->
+		<action name="login_*" class="com.action.LoginAction" method="{1}">
+			<result name="loginSuccess">/MessageInfo/loginSuccess.jsp</result>
+			<result name="success">/Mainbbs.jsp</result>
+			<result name="input">/login.jsp</result>
+			<result name="exit">/redirect.jsp</result>
+			<allowed-methods>regex:.*</allowed-methods>
+		</action>
+		<!-- 版块管理 -->
+		<action name="board_*" class="com.action.BoardAction" method="{1}">
+			<result name="success">/BoardManage/MainBoard.jsp</result>
+			<result name="addBoard">/BoardManage/AddBoard.jsp</result>
+			<result name="addSuccess">/MessageInfo/addBoardSuccess.jsp</result>
+			<result name="prepareBoard" type="redirectAction">board_prepareAddBoard.action</result>
+			<result name="prepareModifyBoard">/BoardManage/modifyBoardInfo.jsp</result>
+		</action>
+		<!-- 管理员管理 -->
+		<action name="admin_*" class="com.action.AdminManageAction" method="{1}">
+			<result name="success">/PersonalInfo/AdminPersonalInfo.jsp</result>
+			<result name="modifySuccess">/PersonalInfo/AdminPersonalInfo.jsp</result>	
+		</action>
+		<!-- 上传图像 -->
+		<action name="upload_*" class="com.action.MyUpload" method="{1}">
+			<interceptor-ref name="fileUpload">
+				<param name="allowedTypes">
+					image/png, image/gif, image/bmp, image/jpeg, image/jpg, image/pjpg
+				</param>
+				<param name="maximumSize">5000000</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<param name="path">/upload</param>
+			<result name="success">/MessageInfo/uploadSuccess.jsp</result>
+			<result name="input">/upload.jsp</result>
+			<result name="modifyOk" type="redirectAction">
+				student_personalStuInfo
+			</result>
+		</action>
+		<!-- 回帖配置 -->
+		<action name="reply_*" class="com.action.ReplyAction" method="{1}">
+			<result name="success" type="redirectAction">
+				post_viewDetail.action?pid=%{#request.pid}
+			</result>
+			<result name="replySuccess">/MessageInfo/replySuccess.jsp?pid=%{#request.pid}</result>
+			<result name="deleteSuccess" type="redirectAction">
+				<param name="actionName"></param>
+				<param name="namespace"></param>
+				<param name="result">${result}</param>
+			</result>
+			<result name="modifySuccess" type="redirectAction">
+				<param name="actionName"></param>
+				<param name="namespace">/</param>
+				<param name="result">${result}</param>	<!-- action参数 -->
+			</result>
+		</action>
+		<!-- 注册管理 -->
+		<action name="register" class="com.action.RegisterAction"> 
+			<result name="register">/register.jsp</result>
+			<result name="input">/register.jsp</result>
+		</action>
+	</package>
+</struts>    
